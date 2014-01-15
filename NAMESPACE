@@ -1,0 +1,151 @@
+#NEED to work out how to compile
+#with imports
+
+#imports
+
+#currently library loaded
+#so user/examples accessible
+#googleMaps and handler examples are issue if this changes
+
+
+#imports
+
+#seem to 
+#need this as well as 
+#lattice in depends
+
+import(lattice)
+
+import(grid)
+import(png)
+import(RgoogleMaps)
+import(RColorBrewer)
+
+#single imports
+
+importFrom(MASS, kde2d) #for panel.kernelDensity
+
+
+#loaPlot
+
+export(loaPlot)
+export(panel.loaPlot)
+export(panel.loaPlot2)
+export(panel.loaGrid)
+
+
+#googleMap
+
+export(GoogleMap)
+export(GoogleMap.old)
+export(googleMap) 
+export(quickMap) 
+export(makeMapArg)
+export(getMapArg)
+export(panel.GoogleMapsRaster) 
+export(panel.GoogleMaps)
+export(xscale.components.GoogleMaps)
+export(yscale.components.GoogleMaps)
+export(axis.components.GoogleMaps)
+
+#trianglePlot
+
+export(trianglePlot) 
+export(panel.triangleFrame) 
+export(panel.triangleAxes) 
+export(panel.triangleGrids) 
+export(triABC2XY)
+export(triXY2ABC)
+
+#special panels
+export(panel.kernelDensity)
+export(panel.binPlot)
+
+#polarPlots
+export(panel.polarPlot)
+export(panel.polarFrame)
+export(panel.polarAxes)
+export(panel.polarGrid)
+export(panel.polarLabels)
+
+#zcase glyph plot
+export(panel.zcasePiePlot)
+export(panel.zcasePieSegmentPlot)
+
+#other plot panels
+export(panel.compareZcases)
+
+
+#formulas
+export(formulaHandler)
+export(stripHandler)
+
+#plot.argument.handlers
+export(cexHandler)
+export(colHandler)
+export(colRegionsHandler)
+export(pchHandler)
+export(zHandler)
+
+#conditioning
+export(groupsPanelHandler)
+export(zcasesPanelHandler)
+export(groupsAndZcasesPanelHandler)
+export(condsPanelHandler)
+export(groupsHandler)
+export(zcasesHandler)
+export(groupsAndZcasesHandler)
+export(stepwiseZcasesGlyphHandler)
+
+#scales.handlers
+export(limsHandler)
+export(localScalesHandler)
+export(panel.localScale)
+
+#panel.pal
+export(panelPal.old)
+export(panelPal)
+export(loaHandler)
+
+#other.panel.pandlers
+export(getArgs)
+export(getPlotArgs)
+export(isGood4LOA)
+export(parHandler)
+
+#keys
+export(keyHandler)
+export(draw.loaPlotZKey)
+export(draw.loaColorKey)
+export(draw.loaColorRegionsKey)
+export(draw.zcasePlotKey)
+
+#list.handlers
+export(listHandler)
+export(listUpdate)
+export(listExpand)
+export(listLoad)
+
+
+#loa.shapes/glyphs
+export(loaPolygon)
+export(loaCircle)
+export(loaPieSegment)
+
+
+#plot.interactives
+export(getXY)
+export(getLatLon)
+export(screenLatticePlot)
+
+
+#misc
+##now in grey.area
+#export(geoFrame)
+#export(geoBearing)
+#export(geoDistance)
+#export(geoElevation)
+#export(geoDestination)
+
+
+
