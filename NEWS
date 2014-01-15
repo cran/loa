@@ -1,0 +1,248 @@
+Changes in loa 0.2.15 [2014-01-15]
+=====================================
+
+*       refinements to loaPlot, panel.binPlot,
+        panel.kernelDensity, draw.loaColorKey 
+        and draw.loaColorRegionsKey 
+        (better alpha/alpha.regions 
+        tracking)
+*       refinements to GoogleMap and 
+        panelPal (better local scale 
+        tracking)
+*       added example data roadmap.meuse 
+        (for off-line ?GoogleMap examples)
+*       updated help examples for loaPlot, 
+        GoogleMap, trianglePlot
+*       fixes for CRAN submission.
+
+
+Changes in loa 0.2.14 [2014-01-04]
+=====================================
+
+*       refinement to draw.loaPlotZKey
+        (better alpha/alpha.regions 
+        tracking)
+
+
+Changes in loa 0.2.13 [2013-12-23]
+=====================================
+
+*       refinement to panel.loaPlot
+        (better alpha/alpha.regions 
+        tracking)
+
+
+Changes in loa 0.2.12 [2013-11-11]
+=====================================
+
+*       refinement to GoogleMap
+        (more robust map sizing for single  
+        point plots)
+        (improve multi-zcase management)
+
+
+Changes in loa 0.2.11 [2013-09-06]
+=====================================
+
+*       refinement to formulaHandler
+        (improved formula.type)
+        (improve multi-zcase management)
+*       update to panel.zcasePiePlot 
+*       minor update to panelPal
+*       geo calculations removed 
+        (now in grey.area package)
+
+
+Changes in loa 0.2.10 [2013-08-11]
+=====================================
+
+*       refinement to panel.binPlot 
+        (added pad.grid argument)
+*       added panel.compareZcases
+*       added screenLatticePlot
+
+
+
+Changes in loa 0.2.9 [2013-06-30]
+=====================================
+
+*       loaPolygon, loaCircle, loaPieSegment added
+*       panel.zcasePiePlot
+*       panel.zcasePieSegmentPlot added
+*       draw.loaColorRegionsKey added
+*       panel.loaPlotGrid added
+        (loaPlot(..., grid=T), etc now uses this)
+*       formulaHandler update
+        (new options, output and panel.zcases 
+        added)
+*       colRegionsHandler added
+        (colHandler wrapper for use with 
+        col.regions arg)
+*       panel.binPlot update
+        (now works with plots like GoogleMap 
+        with rescaled axes)
+
+
+
+Changes in loa 0.2.8 [2013-06-09]
+=====================================
+
+*       localScalesHandler update 
+        (axes col = "transparent" locally overridden 
+        when used to hidden panel box)
+*       panel.polar... functions added
+        (panel.polarPlot, panel.polarFrame, 
+        panel.polarAxes, panel.polarGrids, 
+        panel.polarLabels)
+*       namespace and depends updates
+        (MASS added to required packages; 
+        now Requires: lattice, Imports others)
+*       loaPlot updates 
+        (par.settings uses parHandler directly)
+*       provisional stripHandler added
+*       default cex range changed in cexHandler
+*       GoogleMap update: uses latest PanelPal
+        (older version now GoogleMap.old) 
+*       lat.lon.meuse dataset added 
+
+
+
+Changes in loa 0.2.7 [2013-05-07]
+=====================================
+
+*       listUpdate minor update 
+        (NULL case error fixed)
+*       draw.loaColorKey added
+*       panel.binPlot added
+
+
+Changes in loa 0.2.6 [2013-05-06]
+=====================================
+
+*       panelPal updated 
+        (Previous panelPal2 now main version;
+        Previous panelPal now panelPal.old)
+*       panel.loaPlot updated 
+        (now allows separate group and zcase 
+        conditioning)
+*       panel.loaPlot added 
+*       group and zcase conditioning rationalised 
+        (now using new functions groupsPanelHandler, 
+        zcasesPanelHandler and groupsAndZcasesPanelHandler)
+*       color key management updated
+        (added keyHandler, and dedicated key functions, 
+        draw.loaPlotZKey)
+ 
+
+Changes in loa 0.2.5 [2012-11-22]
+=====================================
+
+*       added panel.loaPlot function
+*       modifed panelPal2 (to work with 
+        panel.loaPlot)
+*       updated GoogleMap and tianglePlot 
+        (to work with improved col and 
+        cex Handlers)    
+
+
+Changes in loa 0.2.4 [2012-11-07]
+=====================================
+
+*       added loaPlot function
+*       added panelPal2 (as in development 
+        alternative to current panelPal)   
+*       added formulaHandler
+*       improved cexHandler and colHandler 
+*       improved panel.kernelDensity
+
+
+Changes in loa 0.2.3 [2012-07-10]
+=====================================
+
+*       improved colHandler colorkey/legend 
+        management
+*       fixed GoogleMap/layout conflict
+*       added panel.kernelDensity
+ 
+        
+Changes in loa 0.2.2 [2012-06-25]
+=====================================
+
+*       renamed googleMap GoogleMap
+        and added googlemap wrapper
+
+
+Changes in loa 0.2.1 [2012-05-05]
+=====================================
+
+*       added getPlotArgs
+*       improved group argument handling 
+        for panelPal
+*       added parHandler      
+*       update to googleMap function 
+        getMapArg: better xlim, ylim handling; 
+        fixed recolor.amp/nativeRaster conflict
+
+
+Changes in loa 0.2.0 [2012-02-10]
+=====================================
+
+*       added trianglePlot function, and 
+        associated panel and data handler 
+        functions
+*       added localScalesHandler for local 
+        scale/axis management
+*       added panel.localScale for adding 
+        in-panel scales 
+
+
+Changes in loa 0.1.5 [2012-01-12]
+=====================================
+
+*       named RgoogleMapWrapper makeMapArg
+        and added getMapArg to simplify user 
+        map work
+*       reordered args in getXY and getLatLon 
+        to simplify typical use
+
+
+Changes in loa 0.1.4 [2012-01-04]
+=====================================
+
+*       geoDestination added
+*       update to googleMap and getLatLon
+        (map now passed in googleMap output)
+        (for access by functions like getLanLon)
+
+
+Changes in loa 0.1.3 [2011-12-21]
+=====================================
+
+*       getXY, getLatLon added
+*       geoFrame, geoBearing, geoDistance, 
+        geoElevation added
+
+
+Changes in loa 0.1.2 [2011-12-20]
+=====================================
+
+*       zHandler added
+*       update to common cond handling of 
+        different googleMap panels 
+*       NAMESPACE added
+
+
+Changes in loa 0.1.1 [2011-12-16]
+=====================================
+
+*       listUpdate added
+*       googleMaps function set added 
+        (these supersede googleMapsPlot set)
+
+
+Changes in loa 0.1 [2011-12-14]
+=====================================
+
+*       First packaging 
+*       cexHandler, colHandler added
+
