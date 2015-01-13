@@ -14,9 +14,9 @@
 }
 \usage{
 
-  formulaHandler(x, data = NULL, groups = NULL, 
-        ..., expand.plot.args = TRUE, formula.type = "z~x*y|cond", 
-        panel.zcases = FALSE, check.xy.dimensions = TRUE, 
+  formulaHandler(x, data = NULL, groups = NULL, ..., 
+        expand.plot.args = TRUE, formula.type = "z~x*y|cond", panel.zcases = FALSE, 
+        coord.conversion = NULL, lattice.like = NULL, check.xy.dimensions = TRUE, 
         check.coord.dimensions = TRUE, get.zcase.dimensions = TRUE, 
         output = "extra.args")
 
@@ -54,6 +54,15 @@
    \item{panel.zcases}{For \code{formulaHandler} only, logical. Should zcase arguments, 
    e.g. \code{z1} and \code{z2} in \code{z1 + z2 ~ x * y | cond}, be treated as 
    panel conditioning terms rather than grouping terms?  
+   }
+
+   \item{coord.conversion}{For \code{formulaHandler} only, function. If supplied, the 
+   conversion to use to convert coordinate information supplied using other 
+   coordinate systems to \code{(x, y)}.   
+   }
+
+   \item{lattice.like}{For \code{formulaHandler} only, list. For preprocessing, a list of 
+   plot terms that can be passed directly to \code{lattice/loa} plots.        
    }
 
    \item{check.xy.dimensions, check.coord.dimensions}{For \code{formulaHandler} only, logicals. 
@@ -94,8 +103,7 @@
    \code{stripHandler} manages the strip component of loa plot functions.
 
    \code{getZcaseDimensions} tracks the dimensions of multiple \code{z} 
-    
- 
+     
 }
 
 \value{
