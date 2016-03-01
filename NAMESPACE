@@ -20,10 +20,22 @@ import(grid)
 import(png)
 import(RgoogleMaps)
 import(RColorBrewer)
+import(mgcv)
 
 #single imports
 
 importFrom(MASS, kde2d) #for panel.kernelDensity
+
+#next lot are because win builder told me too..
+
+importFrom("grDevices", "col2rgb", "colorRampPalette", "gray", "grey",
+           "rgb")
+importFrom("graphics", "par", "plot")
+importFrom("methods", "is")
+importFrom("stats", "aggregate", "as.formula", "loess", "na.omit",
+           "predict", "update")
+importFrom("utils", "compareVersion", "modifyList",
+           "packageDescription")
 
 
 #loaPlot
@@ -67,7 +79,13 @@ export(triXY2ABC)
 ##export(triABC2XY)
 ##export(triXY2ABC)
 
+#stackPlot
+export(stackPlot) 
+export(panel.stackPlot)
+
 #special panels
+export(panel.loaLevelPlot)
+export(panel.surfaceSmooth)
 export(panel.kernelDensity)
 export(panel.binPlot)
 
@@ -88,6 +106,7 @@ export(panel.compareZcases)
 
 #formulas
 export(formulaHandler)
+export(matrixHandler)
 export(stripHandler)
 
 #plot.argument.handlers
@@ -117,6 +136,8 @@ export(listLoad)
 export(limsHandler)
 export(localScalesHandler)
 export(panel.localScale)
+export(yscale.component.log10)
+export(xscale.component.log10)
 
 #panel.pal
 export(panelPal.old)
@@ -135,6 +156,8 @@ export(draw.loaPlotZKey)
 export(draw.loaColorKey)
 export(draw.loaColorRegionsKey)
 export(draw.zcasePlotKey)
+export(draw.ycasePlotKey)
+export(draw.key.log10)
 
 #loa.shapes/glyphs
 export(loaPolygon)

@@ -11,6 +11,9 @@
 
 #formulaHandler - handles the x formula
 #formulaHandler.old - previous version 
+
+#matrixHandler - converts matrx to x formula
+
 #####not exported
 #stripHandler   - handles strips
 #getZcaseDimensions
@@ -261,15 +264,30 @@ formulaHandler <- function (x, data = NULL, groups = NULL, ...,
             temp <- lapply(1:length(zcases), function(x){
                                  rep(names(zcases[x]), t2[x])
                            })
-#factor in previous version
-            zcases <- as.factor(as.vector(unlist(temp)))
+
+
+#############################
+#new bit 0.2.26
+#############################
+#self ordering factor in previous version
+#level added to order based on supplied order
+#############################
+            zcases <- factor(as.vector(unlist(temp)), levels = unique(as.vector(unlist(temp))))
 
             temp.fun5 <- function(x){
                             if(is.list(x)) {
                                 for(i in 1:length(x)){
                                     temp <- lapply(1:length(t2), function(y)
                                                         rep(x[[i]], length.out=t2[y]))
-                                    x[[i]] <- as.vector(unlist(temp))
+###############################
+#new bit 0.20.28
+###############################
+#handle posixct better
+#                                    x[[i]] <- as.vector(unlist(temp))
+                                     x[[i]] <- do.call(c, temp)
+                                     if("tzone" %in% names(attributes(temp[[1]])))
+                                          attributes(x[[i]])$tzone <- attributes(temp[[1]])$tzone
+###############################
                                 }
                                 x
                             } else return(x)
@@ -338,20 +356,63 @@ formulaHandler <- function (x, data = NULL, groups = NULL, ...,
 #others >> x,y
 #before plot call
 
-    if(!is.null(coord.conversion)){
-        lattice.like <- listUpdate(lattice.like, do.call(coord.conversion, lattice.like))
-    }
-    extra.args <- listUpdate(extra.args, lattice.like, 
-                          ignore.b = c("panel.condition", "x", "y"))
+#    if(!is.null(coord.conversion)){
+#        lattice.like <- listUpdate(lattice.like, do.call(coord.conversion, lattice.like))
+#    }
 
+#new fix BUT this needs revisiting
+
+#    if (!is.null(coord.conversion)) {
+#        temp <- extra.args[names(extra.args) %in% names(formals(coord.conversion))]
+#        lattice.like <- listUpdate(listUpdate(lattice.like, temp), do.call(coord.conversion, 
+#            lattice.like))
+#    }
+
+
+#new fix from version 0.2.28
+#(stackPlot introduction)
+#this may still need revisiting
+
+#    if (!is.null(coord.conversion)) {
+#        temp <- extra.args[names(extra.args) %in% names(formals(coord.conversion))]
+#        lattice.like <- do.call(coord.conversion, listUpdate(lattice.like, temp))
+#    }
+
+#new fix from version 0.2.29
+#(z/zcase realignment after above 'fix')
+#this may still need revisiting
+
+    if (!is.null(coord.conversion)) {
+        temp <- extra.args[names(extra.args) %in% names(formals(coord.conversion))]
+        temp <- do.call(coord.conversion, listUpdate(lattice.like, 
+            temp))
+        lattice.like <- listUpdate(lattice.like, temp)
+    }
 
 
 #################
 #this makes some of 
 #below redundant
+#(if it works)
 ################
 
 #############
+
+
+###############
+#testing return labels
+###############
+
+#this might now be redundant
+
+     temp <- listUpdate(lattice.like, extra.args, use=c("xlab", "ylab", "zlab"))
+     lattice.like <- listUpdate(lattice.like, temp)
+
+
+#this might now be redundant
+
+    extra.args <- listUpdate(extra.args, lattice.like, 
+                          ignore.b = c("panel.condition", "x", "y"))
 
     extra.args <- do.call(stripHandler, listUpdate(list(striplab = names(lattice.like$panel.condition)), 
         extra.args))
@@ -379,6 +440,76 @@ formulaHandler <- function (x, data = NULL, groups = NULL, ...,
     return(extra.args)
 
 }
+
+
+
+
+
+
+
+#############################
+#############################
+##matrixHandler
+#############################
+#############################
+
+
+#this is based on levelplot.matrix in lattice
+
+#started 
+#kr 26/04/2015
+
+matrixHandler <- function (x, data = NULL, row.values=NULL, 
+                           column.values=NULL, ...){
+
+    extra.args <- list(...)
+
+    if(is.null(row.values)) row.values <- seq_len(nrow(x))
+    if(is.null(column.values)) column.values <- seq_len(ncol(x))
+
+###tidy
+    stopifnot(length(row.values) == nrow(x), length(column.values) == 
+        ncol(x))
+    
+##tidy 
+    if (!is.null(data)) 
+        warning("supplied 'data' ignored; x matrix content used")
+
+
+    form <- z ~ row * column
+    data <- expand.grid(row = row.values, column = column.values)
+    data$z <- as.vector(as.numeric(x))
+
+
+#    if (!"xlim" %in% names(extra.args)) 
+#        extra.args$xlim <- if (!is.null(rownames(x))) 
+#            rownames(x)
+#        else range(row.values, finite = TRUE) + c(-0.5, 0.5)
+#    if (!"ylim" %in% names(extra.args)) 
+#        extra.args$ylim <- if (!is.null(colnames(x))) 
+#            colnames(x)
+#        else range(column.values, finite = TRUE) + c(-0.5, 0.5)
+
+    if (!"xlim" %in% names(extra.args)) 
+        extra.args$xlim <- range(row.values, finite = TRUE) + c(-0.5, 0.5)
+    if (!"ylim" %in% names(extra.args)) 
+        extra.args$ylim <- range(column.values, finite = TRUE) + c(-0.5, 0.5)
+
+     listUpdate(list(x=form, data=data), extra.args)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

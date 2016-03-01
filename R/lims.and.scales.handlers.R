@@ -27,7 +27,7 @@
 ###########################
 ###########################
 
-limsHandler <- function(x=NULL, y=NULL, z=NULL, ..., lim.borders = 0.1){
+limsHandler <- function(x=NULL, y=NULL, z=NULL, ..., lim.borders = 0.05){
 
     #############
     #setup
@@ -54,13 +54,13 @@ limsHandler <- function(x=NULL, y=NULL, z=NULL, ..., lim.borders = 0.1){
 
     fun01 <- function(x, b1, b2 = 0.2){
                  if(all(is.na(x))) return(NULL)
-                 temp <- diff(range(x, na.rm=TRUE)) * b1
+##                 temp <- diff(range(x, na.rm=TRUE)) * b1
 
 ##########################
 #temp fix for ~0*0 issue
 #                 if(temp==0) temp <- x[1] * b2
-                 if(temp==0)
-                     temp <- if(x[1]==0) b2 else x[1] * b2
+##                 if(temp==0)
+##                     temp <- if(x[1]==0) b2 else x[1] * b2
 #consider
 #might be simplier to
 #drop the else 
@@ -70,9 +70,26 @@ limsHandler <- function(x=NULL, y=NULL, z=NULL, ..., lim.borders = 0.1){
 #to first case
 ###########################
 
-                 x <- range(x)
-                 c(x[1]-temp, x[2]+temp)
-    }
+##                 x <- range(x)
+##################
+#0.2.28
+##################
+#track tzone if posixct
+
+
+                 x <- unique(x[is.finite(x)])
+                 temp <- diff(range(x, na.rm = TRUE)) 
+                 if (temp == 0) {
+                     temp <- if (x[1] == 0) 
+                         b1 else x[1] * b1 
+                 } else temp <- temp * b1
+
+                 temp <- c(x[1] - temp, x[2] + temp)
+                 if("tzone" %in% names(attributes(x)))
+                     attributes(temp)$tzone <- attributes(x)$tzone
+                 temp
+###################
+              }
    
     ####################################
     #check for x, y and z and their lims
@@ -330,6 +347,45 @@ panel.localScale <- function(x.loc, y.loc, lim, ...,
                                            labels = labels), annotation.pars)) 
     }       
 
+}
+
+
+
+
+################################
+#test scalers
+################################
+
+
+logTicks <- function (lim, loc = c(1, 5)) {
+    ii <- floor(log10(range(lim))) + c(-1, 2)
+    main <- 10^(ii[1]:ii[2])
+    r <- as.numeric(outer(loc, main, "*"))
+    r[lim[1] <= r & r <= lim[2]]
+}
+
+yscale.component.log10 <- function(...) {
+    ans <- yscale.components.default(...)
+    ans$right <- ans$left
+    temp <- logTicks(10^ans$num.limit, 1:9)
+    ans$left$ticks$at <- log10(temp)
+    temp <- logTicks(10^ans$num.limit, c(1,3,5))
+    ans$left$labels$at <- log10(temp)
+    ans$left$labels$labels <- temp
+    ans$right <- ans$left
+    ans
+}
+
+xscale.component.log10 <- function(...) {
+    ans <- xscale.components.default(...)
+    ans$bottom <- ans$top
+    temp <- logTicks(10^ans$num.limit, 1:9)
+    ans$bottom$ticks$at <- log10(temp)
+    temp <- logTicks(10^ans$num.limit, c(1,3,5))
+    ans$bottom$labels$at <- log10(temp)
+    ans$bottom$labels$labels <- temp
+    ans$top <- ans$bottom
+    ans
 }
 
 

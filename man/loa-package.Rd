@@ -14,8 +14,8 @@
 \tabular{ll}{
 Package: \tab loa\cr
 Type: \tab Package\cr
-Version: \tab 0.2.22\cr
-Date: \tab 2014-01-20\cr
+Version: \tab 0.2.38\cr
+Date: \tab 2016-03-01\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }
@@ -34,6 +34,8 @@ use of this framework. These are summarized in section 1 of this manual, and inc
 1.2. \code{\link{GoogleMap}} and associated geoplotting functions.
 
 1.3. \code{\link{trianglePlot}} and associated functions.
+
+1.4. \code{\link{stackPlot}} and associated functions.
 
 Other \code{panel...} functions and example data are summarized in sections 2 and 
 3, respectively:

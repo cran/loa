@@ -1,7 +1,78 @@
-Changes in loa 0.2.21 [2015-01-21]
+Changes in loa 0.2.31 [2016-02-29]
+=====================================
+
+*       updates re CRAN resubmission
+
+
+Changes in loa 0.2.29 [2015-12-12]
+=====================================
+
+*       formulaHandler update
+*       panel.loaGrid update, improved 
+        tracking of POSIX axis
+
+
+Changes in loa 0.2.28 [2015-11-18]
+=====================================
+
+*       formulaHandler, draw.zcasePlotKey
+        updates, now tracks zcases better
+*       added stackPlot, panel.stackPlot 
+        and associated data handler 
+        stackXZ2XYZ(not export)
+*       added draw.ycasePlotKey 
+        
+
+Changes in loa 0.2.27 [2015-08-06]
+=====================================
+
+*       panelPal, formulaHandler and 
+        limsHandler updates, improved 
+        POSIXct handling 
+
+
+Changes in loa 0.2.26 [2015-07-25]
+=====================================
+
+*       loaPlot/formulaHandler update, 
+        zcase now factor when panelled
+*       parHandler update, raised lower
+        end of default col.regions
+
+
+Changes in loa 0.2.25 [2015-06-03]
+=====================================
+
+*       loaHandler update, improved 
+        third party data.panel tracking
+*       triABC2XY update
+
+
+Changes in loa 0.2.24 [2015-04-22]
+=====================================
+
+*       smoother col gradient for 
+        colRegionsHandler
+*       added panel.loaLevelPlot 
+*       added panel.surfaceSmooth
+*       added matrixHandler function
+*       update to loaPlot, now also 
+        accepts matrix as x input
+
+
+Changes in loa 0.2.23 [2015-03-05]
+=====================================
+
+*       xlab, ylab fix for 0.2.21 
+*       formulaHandler update to allow default 
+        trianglePlot normalisation  
+ 
+
+Changes in loa 0.2.21-2 [2015-01-21]
 =====================================
 
 *       minor updates for CRAN submission
+*       jss paper reference added to citation 
 
 
 Changes in loa 0.2.20 [2015-01-09]

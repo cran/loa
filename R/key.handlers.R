@@ -137,8 +137,12 @@ draw.loaColorKey <- function (key = NULL, draw = FALSE, vp = NULL, ...){
 
 #new bit testing
 
-        if("isolate.col.regions" %in% names(key))
+        if ("isolate.col.regions" %in% names(key)){
+
             key$col <- NULL
+            key$alpha <- NULL
+        }
+
 
 
         key$col <- do.call(colHandler, listUpdate(key, 
@@ -222,6 +226,16 @@ draw.zcasePlotKey <- function (key = NULL, draw = FALSE, vp = NULL, ...)
         return(nullGrob())
     }
 
+#new version 0.2.28
+#test for turning off zcase key if only one colour set
+#only currently applied by stackPlot as a ycases argument
+#overridden there using force.key = TRUE
+
+    if("zcases.key.method2" %in% names(key) && key$zcases.key.method2)
+        if("col" %in% names(key) && length(key$col)<2)
+            return(nullGrob())
+
+    
     if(!"zcase.ids" %in% names(key)){
         key$zcase.ids <- if("zlab" %in% names(key))
                              key$zlab else " "
@@ -424,6 +438,45 @@ draw.zcasePlotKey <- function (key = NULL, draw = FALSE, vp = NULL, ...)
     key.gf <- placeGrob(key.gf, zcases.labels, row = 2, col = 2)
     key.gf
 }
+
+
+
+
+######################################
+######################################
+##draw.ycasePlotKey
+######################################
+######################################
+
+
+draw.ycasePlotKey <- function (key = NULL, draw = FALSE, vp = NULL, ...) 
+{
+    extra.args <- list(...)
+
+    if (!is.list(key)) {
+        warning("suspect key ignored", call. = FALSE)
+        return(nullGrob())
+    }
+
+#new to version 0.2.28
+#test for turning off key if only one colour set
+#only currently applied by stackPlot 
+#overridden there using force.key = TRUE
+
+    if("ycase.key.method2" %in% names(key) && key$ycase.key.method2)
+        if("col" %in% names(key) && length(key$col)<2)
+            return(nullGrob())
+
+    if(!"ycases.main" %in% names(key))
+        key$ycases.main <- "ycases"
+
+    #cheat to use zcasePlot for ycases
+    names(key) <- gsub("ycases", "zcases", names(key))
+    names(extra.args) <- gsub("ycases", "zcases", names(extra.args))
+    do.call(draw.zcasePlotKey, listUpdate(list(key = key, draw = draw, vp = vp), extra.args))  
+    
+}   
+
 
 
 
@@ -1004,6 +1057,26 @@ if(is.list(zcases) && length(zcases) > 0){
 
 }
 
+
+
+######################################
+#temp keys
+######################################
+
+
+draw.key.log10 <- function (key = NULL, draw = FALSE, vp = NULL, ...) {
+    if (!"at" %in% names(key))
+        key$at <- seq(min(key$zlim), max(key$zlim), length.out = 100)
+   ticks <- if("tick.number" %in% names(key))
+                     key$tick.number else 5
+    if(!"labels" %in% names(key)){
+        temp <- logTicks(10^c(min(key$zlim), max(key$zlim)), 1:9)
+        temp <- temp[log10(temp)>=min(key$at) & log10(temp)<=max(key$at)]
+        key$labels$at <- log10(temp)
+        temp2 <- logTicks(10^c(min(key$zlim), max(key$zlim)), 1)
+        key$labels$labels <- ifelse(temp %in% temp2, temp, "")
+    }
+   draw.loaColorKey(key = key, draw = draw, vp = vp, ...) }
 
 
 

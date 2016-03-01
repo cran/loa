@@ -1,24 +1,20 @@
 Package: loa
 Type: Package
-Title: Various Options and Add-ins for Lattice
-Version: 0.2.22
-Date: 2015-01-20
+Title: Lattice Options and Add-Ins
+Version: 0.2.38
+Date: 2016-03-01
 Author: Karl Ropkins
 Maintainer: Karl Ropkins <k.ropkins@its.leeds.ac.uk>
-Description: This package, Lattice Options and Add-ins (or loa), contains various plots and 
-   functions that make use of the lattice/trellis plotting framework. The plots (which include 
-   loaPlot, GoogleMap and trianglePlot) use panelPal, a function that extends lattice and hexbin 
-   package methods to automate plot subscripting and panel-to-panel and panel-to key 
-   synchronization/management. See ?loa for further details.   
-Depends: R (>= 2.13.0), lattice
-Imports: MASS, grid, png, RgoogleMaps, RColorBrewer
+Description: Various plots and functions that make use of the lattice/trellis plotting framework. 
+   The plots (which include 'loaPlot', 'GoogleMap' and 'trianglePlot') use panelPal(), a function that 
+   extends 'lattice' and 'hexbin' package methods to automate plot subscript and panel-to-panel 
+   and panel-to-key synchronization/management.   
+Depends: R (>= 3.0.0), lattice
+Imports: methods, MASS, grid, png, RgoogleMaps, RColorBrewer, mgcv
 License: GPL (>= 2)
 LazyLoad: yes
 LazyData: yes
-Repository: CRAN
-Repository/R-Forge/Project: loa
-Repository/R-Forge/Revision: 51
-Repository/R-Forge/DateTimeStamp: 2015-01-20 12:15:54
-Date/Publication: 2015-01-21 00:13:59
-Packaged: 2015-01-20 12:25:27 UTC; rforge
+Packaged: 2016-03-01 12:01:33 UTC; Karl
 NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2016-03-01 17:08:00
