@@ -12,8 +12,7 @@
 }
 \usage{
 
-panel.zcasePiePlot(..., zcase.rescale=TRUE, 
-         loa.settings = FALSE)
+panel.zcasePiePlot(..., loa.settings = FALSE)
 
 panel.zcasePieSegmentPlot(..., zcase.rescale=TRUE, 
          loa.settings = FALSE)
@@ -56,7 +55,7 @@ panel.zcasePieSegmentPlot(..., zcase.rescale=TRUE,
   formula). 
 
   \code{panel.zcasePieSegmentPlot} is a variation on the conventional pie plot where segement radius 
-  rather than segment width is varying by zcase.   
+  rather than segment width is varying by zcase.    
 
 }
 
@@ -89,8 +88,12 @@ panel.zcasePieSegmentPlot(..., zcase.rescale=TRUE,
 
 \note{
 
-  Functions in development. Arguments may change.    
+  Functions in development. Arguments may change, e.g.: 
 
+  \code{panel.zcasePieSegmentPlot} includes the argument \code{zcase.rescale}. 
+  This normalises data within each zcase before generating the pie segments. This 
+  might not stay. 
+  
 }
 
 \seealso{
@@ -105,13 +108,14 @@ panel.zcasePieSegmentPlot(..., zcase.rescale=TRUE,
 ## Example 1
 ## plotting georeferenced pie plots
 
-#  Use a subsample of lat.lon.meuse
+#  Using a subsample of lat.lon.meuse
 temp <- lat.lon.meuse[sample(1:155, 15),]
 
+\dontrun{
 #  plot Cu/Pb/Zn pie plots at sampling locations
-#  loaPlot(copper+lead+zinc~longitude*latitude, 
-#          panel=panel.zcasePiePlot, data=temp)
-#  then rescale smaller pie segments on the fly
+   loaPlot(copper+lead+zinc~longitude*latitude, 
+           panel=panel.zcasePiePlot, data=temp)
+#  then rescale smaller pie segments on the fly}
 
 loaPlot(copper*10+lead*4+zinc~longitude*latitude, 
         panel=panel.zcasePiePlot, data=temp)

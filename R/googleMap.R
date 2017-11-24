@@ -75,6 +75,21 @@ GoogleMap <- function (x, data = NULL, panel = panel.loaPlot, map = NULL,
         map <- do.call(makeMapArg, temp)
     }
 
+##################################
+#this bit catchs maps make in RgoogleMaps 
+#rather than loa
+
+    if(any(!c("xlim", "ylim") %in% names(map))){
+        temp <- LatLon2XY.centered(map, c(map$BBOX$ll[1], map$BBOX$ur[1]), 
+               c(map$BBOX$ll[2], map$BBOX$ur[2]))
+        map$xlim <- temp$newX
+        map$ylim <- temp$newY
+    }
+    if (!"aspect" %in% names(map)) 
+        map$aspect <- sqrt((diff(map$ylim)/diff(map$xlim))^2)
+
+##################################
+
     #plot basic plot
     ans <- do.call(loaPlot, listUpdate(list(x = x, data = data, 
         panel = panel), extra.args))
@@ -500,6 +515,18 @@ makeMapArg <- function(ylim, xlim,
         }
 
         if(length(ra) > 2){
+
+#############################
+#testing
+#newer RgoogleMaps response
+            if (ra[3] == 4 & is.null(attr(map$myTile,"type"))){
+                map$myTile <- rgb(map$myTile[, , 1], map$myTile[, , 2], 
+                                  map$myTile[, , 3], map$myTile[, , 4])
+                dim(map$myTile) <- ra[1:2]
+                return(map)
+            }
+##############################
+
             if(ra[3] == 4 & attr(map$myTile, "type") == "rgb"){
                 map$myTile <- rgb(map$myTile[, , 1], map$myTile[, , 2], 
                                   map$myTile[, , 3], map$myTile[, , 4])

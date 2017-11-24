@@ -2,12 +2,16 @@
 \alias{1.3.triangle.plots}
 \alias{trianglePlot}
 \alias{panel.trianglePlot}
+\alias{panel.triangleByGroupPolygon}
+\alias{panel.triangleKernelDensity}
+\alias{panel.triangleSurfaceSmooth}
 \alias{panel.trianglePlotFrame}
 \alias{panel.trianglePlotAxes}
 \alias{panel.trianglePlotGrid}
 \alias{triLimsReset}
 \alias{triABC2XY}
 \alias{triXY2ABC}
+\alias{triABCSquareGrid}
 
 
 \title{
@@ -34,6 +38,17 @@
             ..., axes = TRUE, ticks=TRUE, annotation=TRUE, 
             panel.scales = NULL)  
 
+   #other panels
+   panel.triangleByGroupPolygon(x = NULL, y = NULL, a0 = NULL, 
+            b0 = NULL, c0 = NULL, ..., loa.settings = FALSE, 
+            plot = TRUE, process = TRUE) 
+   panel.triangleKernelDensity(x = NULL, y = NULL, a0 = NULL, 
+            b0 = NULL, c0 = NULL, ..., loa.settings = FALSE, 
+            plot = TRUE, process = TRUE) 
+   panel.triangleSurfaceSmooth(x = NULL, y = NULL, z = NULL, 
+            a0 = NULL, b0 = NULL, c0 = NULL, ..., loa.settings = FALSE, 
+            plot = TRUE, process = TRUE) 
+
    #data handlers
 
    triABC2XY(a, b = NULL, c = NULL, ..., force.abc = TRUE, 
@@ -42,15 +57,18 @@
    triXY2ABC(x, y = NULL, ..., force.xy = TRUE, 
             verbose = FALSE)
    triLimsReset(ans)
+   triABCSquareGrid(a, b = NULL, c = NULL, ..., n=100)
+
 }
 
 \arguments{
 
-  \item{x}{ For \code{trianglePlot} only, a formula with the general structure 
-   \code{z ~ a0 + b0 + c0 | cond}. The elements a0, b0 and c0, the inputs for 
-   the three axis on the triangle plot, are required, while \code{z} 
-   and conditioning (\code{cond}) are optional. (For other functions, \code{x} 
-   may be used as the pair to \code{y}. See \code{y} below.)  
+  \item{x}{ For \code{trianglePlot} only, a formula in structure 
+   \code{z ~ a0 + b0 + c0 | cond}. The elements \code{a0}, \code{b0} 
+   and \code{c0}, the inputs for the three axis on the triangle plot, 
+   are required, while \code{z} and conditioning (\code{cond}) are optional. 
+   (For other functions, \code{x} may be used as the pair to \code{y}. 
+   See \code{y} below.)  
    }
 
   \item{data}{ For \code{trianglePlot} only, if supplied, the assumed source 
@@ -70,11 +88,11 @@
    \code{axes}, \code{ticks}, \code{grid}, etc. (See below).  
    }
 
-  \item{y, a, a0, b, b0, c, c0}{(and \code{x} in relevant functions). \code{a/a0} , \code{b/b0} and 
+  \item{y, a, a0, b, b0, c, c0, z}{(and \code{x} in relevant functions). \code{a/a0} , \code{b/b0} and 
    \code{c/c0} are the three scales of the triangle plot, and \code{x} and \code{y} 
    are the equivalent 2-D projections. The arguments are typically options in panel functions 
    (\code{panel...} functions), conversion functions (\code{triABC2XY} and \code{triXY2ABC}) and 
-   the scaling function \code{triLimsReset}. 
+   the scaling function \code{triLimsReset}. \code{z} is the z-case from the plot formula.  
    }
 
   \item{loa.settings, plot, process}{\code{\link{loaPlot}} arguments used to manage 
@@ -86,8 +104,8 @@
    a vector (in which case they are assumed to be color assignments) or a list of standard plot 
    parameters, e.g. \code{col}, \code{lty}, \code{lwd}, etc. for color, line type and line thickness, 
    etc. Plot parameter assignments are applied to all axes unless specific axes are identified. For 
-   example, \code{trianglePlot} calls including \code{grid.col = 2} or \code{grids = list(col = 2)} make 
-   all axes red, while calls including \code{grid.a0.col = 2} or \code{grid = list(a0 = list(col = 2)} only 
+   example, \code{trianglePlot} calls including \code{grid.col = 2} make 
+   all axes red, while calls including \code{grid.a0.col = 2} only 
    recolor the first (a0) axis.
    }
 
@@ -111,7 +129,7 @@
   } 
 
   \item{if.na}{ Character. Handling method to be used if \code{NAs} are present. 
-   The default \code{'remove.row'} replaces all enteries in the same row with 
+   The default option \code{'remove.row'} replaces all enteries in the same row with 
    \code{NAs}. (Note: this is different from \code{\link{na.omit}} which would 
    remove the whole row. Here, the row is retained as \code{NAs} to maintain 
    indices for conditioning.) Other options currently include: \code{'make.zero'} 
@@ -134,6 +152,9 @@
    to be scaled and plotted based on the assumption that it is a \code{trianglePlot}.
   }
 
+   \item{n}{For \code{triABCSquareGrid} only, number of points to divide each axes by 
+    when generating the data grid.
+   }
   
 }
 
@@ -143,21 +164,31 @@
    \code{trianglePlot} generates a triangle plot using the lattice framework.
 
    \code{panel.trianglePlot...} functions handle the appearance of triangle plot
-    outputs. \code{panel.trianglePlot}, which is assigned as the default \code{panel} 
+    outputs. 
+
+   \code{panel.trianglePlot}, which is assigned as the default \code{panel} 
     manages both the data layer of the plot and the plot frame (axes, grid, annotation, 
-    etc). \code{panel.trianglePlotAxes} and \code{panel.trianglePlotGrid} generate 
+    etc). 
+
+   \code{panel.trianglePlotAxes} and \code{panel.trianglePlotGrid} generate 
     axes and grid componets of the plot, and \code{panel.trianglePlotFrame} is 
     a wrapper for these. The data layer, which by default is \code{panel.loaPlot}, 
     can be accessed separately using the \code{data.panel} argument. 
 
+   \code{triangleKernelDensity} generates a kernel density surface for supplied \code{a0}, 
+   \code{b0} and \code{c0} cases. 
+
+   \code{triangleSurfaceSmooth} generates a smoothed surface for supplied \code{a0}, 
+   \code{b0}, \code{c0} and \code{z} cases. 
+
    \code{triABC2XY} converts supplied (a, b, c) coordinates to an (x, y) scale suitable 
-    for use with \code{panel.trianglePlotFrame}, etc. 
+    for use with triangle plot functions. 
 
     \code{triXY2ABC} converts supplied (x,y) coordinates from triangle plots to the associated 
     proportional (a, b, c) scale. 
 
-    There are various options for range limiting with \code{triABC2XY} and \code{triXY2ABC}, 
-    and therefore \code{trianglePlot} as well. Firstly, limits can be set individually with 
+    There are various options for range limiting with \code{triABC2XY}, \code{triXY2ABC}, 
+    and therefore triangle plots. Firstly, limits can be set individually with 
     \code{alim}, \code{blim} and \code{clim}, much like with \code{xlim} and \code{ylim} for 
     conventional plots. However, they can also be set at once using \code{lims}, as in e.g. 
     \code{lims = c(0, 1)} to set all axes to full ranges, or on the basis of minimum and maximum 
@@ -200,11 +231,11 @@
 
    \code{triXY2ABC} returns a list containing the named 
    components \code{a}, \code{b} and \code{c}, which are the (a,b,c) 
-   \code{trianglePlot} coordinates associated with supplied 2-D (x, y) that 
+   triangle plot coordinates associated with supplied 2-D (x, y) that 
    \code{trianglePlot} would generate.
 
    \code{resetTriLims} returns a supplied trellis object, rescaled 
-   based on the assumption that it is a \code{trianglePlot}.
+   based on the assumption that it is a triangle plot.
 
 }
 
@@ -305,7 +336,7 @@
 
    Code currently in revision. Please handle with care.
    
-   \code{triABC2XY}: 
+   \code{triABC2XY, triABCSquareGrid}: 
 
    Code currently in revision. Please handle with care.
               
@@ -339,27 +370,15 @@ trianglePlot(cadmium~copper+lead+zinc|lime,
 
 # Formula variations:
 # basic triangle plot without z values assignment
-# trianglePlot(~copper+lead+zinc, data=lat.lon.meuse) 
+# trianglePlot(~a0+b0+c0, ...) 
 # ... with z values set
-# trianglePlot(cadmium~copper+lead+zinc, data=lat.lon.meuse)
+# trianglePlot(z~a0+b0+c0, ...)
 # ... with grouping 
-# trianglePlot(cadmium~copper+lead+zinc, groups = lat.lon.meuse$lime, 
-#              data=lat.lon.meuse)
+# trianglePlot(z~a0+b0+c0, groups=grps, ...)
 
 
 ## Example 2 
 ## Basic frame (axes, grid, tick, annotation) management 
-
-# trianglePlot(~1+1+1, type="n")          ## empty frame
-                                          ## make using type="n"    
-# trianglePlot(~1+1+1, type="n", 
-#              grid = FALSE)              ## turn off grid 
-# trianglePlot(~1+1+1, type="n", 
-#              grid.col = 2)              ## or change plot settings
-# trianglePlot(~1+1+1, type="n", 
-#              grid.a0.lty = 1)
-# trianglePlot(~1+1+1, type="n", 
-#              grid = list(a0 = list(lty = 1)))
 
   trianglePlot(~1+1+1, type="n", 
                grid.alpha = 0.2, 

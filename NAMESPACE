@@ -21,6 +21,7 @@ import(png)
 import(RgoogleMaps)
 import(RColorBrewer)
 import(mgcv)
+import(plyr)
 
 #single imports
 
@@ -29,13 +30,14 @@ importFrom(MASS, kde2d) #for panel.kernelDensity
 #next lot are because win builder told me too..
 
 importFrom("grDevices", "col2rgb", "colorRampPalette", "gray", "grey",
-           "rgb")
+           "rgb", "as.raster")
 importFrom("graphics", "par", "plot")
 importFrom("methods", "is")
 importFrom("stats", "aggregate", "as.formula", "loess", "na.omit",
-           "predict", "update")
+           "predict", "update", "model.frame")
 importFrom("utils", "compareVersion", "modifyList",
            "packageDescription")
+
 
 
 #loaPlot
@@ -64,12 +66,16 @@ export(axis.components.GoogleMaps)
 
 export(trianglePlot) 
 export(panel.trianglePlot)
+export(panel.triangleByGroupPolygon)
 export(panel.trianglePlotFrame)
 export(panel.trianglePlotGrid)
 export(panel.trianglePlotAxes)
+export(panel.triangleKernelDensity)
+export(panel.triangleSurfaceSmooth)
 export(triLimsReset)
 export(triABC2XY)
 export(triXY2ABC)
+export(triABCSquareGrid)
 
 #superceded functions
 ##export(trianglePlot) 
@@ -82,6 +88,10 @@ export(triXY2ABC)
 #stackPlot
 export(stackPlot) 
 export(panel.stackPlot)
+
+#loaBarPlot
+export(loaBarPlot) 
+
 
 #special panels
 export(panel.loaLevelPlot)
@@ -110,6 +120,7 @@ export(matrixHandler)
 export(stripHandler)
 
 #plot.argument.handlers
+export(scalesHandler)
 export(cexHandler)
 export(colHandler)
 export(colRegionsHandler)
@@ -157,6 +168,7 @@ export(draw.loaColorKey)
 export(draw.loaColorRegionsKey)
 export(draw.zcasePlotKey)
 export(draw.ycasePlotKey)
+export(draw.groupPlotKey)
 export(draw.key.log10)
 
 #loa.shapes/glyphs

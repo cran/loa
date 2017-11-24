@@ -1,12 +1,18 @@
 #in development code
 #[TBC - NUMBER] functions 
 
+#panel.loaLevelPlot
+#panel.loaLevelPlotRaster - currently not exported
+#panel.surfaceSmooth
 #panel.kernelDensity
 #panel.binPlot
 #panel.surfaceSmooth
 
 
 #NOTE: much borrowed from lattice 
+
+
+
 
 
 ###################################
@@ -30,15 +36,19 @@ panel.loaLevelPlot <- function (x = NULL, y = NULL, z = NULL,
                     ##common.args = c(), 
                     default.settings = list(key.fun = "draw.loaColorKey", 
                                             region = TRUE, contour = TRUE, 
-                                            lim.borders = 0.05, 
-                                            isolate.col.regions = TRUE)
-                    ))
+                                            lim.borders = 0.05, key.raster = TRUE,
+                                            isolate.col.regions = TRUE)))
 
 
+##########################
+#question
+#might be able to more the key.raster = true into the draw... function
+##########################
 
-##################
-#plotting
-##################
+
+     ##################
+     #plotting
+     ##################
 
      #grid
      if(isGood4LOA(extra.args$grid)) 
@@ -59,11 +69,18 @@ panel.loaLevelPlot <- function (x = NULL, y = NULL, z = NULL,
                             contour = FALSE))
          if("groups" %in% names(temp) || "zcases" %in% names(temp)) 
              do.call(groupsAndZcasesPanelHandler, listUpdate(temp, 
-                list(panel = panel.levelplot)))
-             else do.call(panel.levelplot, temp)
+                list(panel = panel.loaLevelPlotRaster)))
+             else do.call(panel.loaLevelPlotRaster, temp)
      }
 
      #contour
+####################
+#note: 
+#contour uses panel.levelplot, 
+#but region uses panel.loaLevelPlotRaster
+#this is for better transparency handling
+#for pdf plotting
+####################
      temp <- do.call(listLoad, listUpdate(extra.args, list(load = "contour")))$contour
      temp.fun <- function(...) {
                    extra.args <- list(...)
@@ -92,6 +109,91 @@ panel.loaLevelPlot <- function (x = NULL, y = NULL, z = NULL,
 
 
 
+#####################################
+#####################################
+##panel.loaLevelPlotRaster
+#####################################
+#####################################
+
+#currently not exported
+
+#this is just panel.levelplot.raster with 
+#loa colHandler handling of colours
+
+
+panel.loaLevelPlotRaster <- function (x, y, z, subscripts, at = pretty(z), ..., col.regions = regions$col, 
+    alpha.regions = regions$alpha, interpolate = FALSE, identifier = "levelplot") 
+{
+    if (length(subscripts) == 0) 
+        return()
+    regions <- trellis.par.get("regions")
+    x.is.factor <- is.factor(x)
+    y.is.factor <- is.factor(y)
+    x <- as.numeric(x)
+    y <- as.numeric(y)
+    z <- as.numeric(z)
+#####################
+#lattice line
+#    zcol <- level.colors(z, at, col.regions, alpha.regions=0.5, colors = TRUE)
+#loa variation for alpha handling
+    zcol <- colHandler(z=z, at=at, col.regions=col.regions, alpha.regions=alpha.regions)
+#####################
+    x <- x[subscripts]
+    y <- y[subscripts]
+    z <- z[subscripts]
+    zcol <- zcol[subscripts]
+    temp.fun <- function(){
+        aname <- "group.number"
+        fnames <- names(formals(sys.function(sys.parent())))
+        if (is.na(match(aname, fnames))) {
+            if (is.na(match("...", fnames))) 
+                FALSE
+            else {
+                dotsCall <- eval(quote(substitute(list(...))), sys.parent())
+                !is.na(match(aname, names(dotsCall)))
+            }} else FALSE
+    }
+    if (temp.fun()) 
+        group <- list(...)$group.number
+    else group <- 0
+    if (x.is.factor) {
+        ux <- seq(from = min(x, na.rm = TRUE), to = max(x, na.rm = TRUE))
+        xwid <- 1L
+    }
+    else {
+        ux <- sort(unique(x[!is.na(x)]))
+        if (!isTRUE(all.equal(diff(range(diff(ux))), 0))) 
+            warning("'x' values are not equispaced; output may be wrong")
+        xwid <- mean(diff(ux))
+    }
+    if (y.is.factor) {
+        ux <- seq(from = min(y, na.rm = TRUE), to = max(y, na.rm = TRUE))
+        ywid <- 1L
+    }
+    else {
+        uy <- sort(unique(y[!is.na(y)]))
+        if (!isTRUE(all.equal(diff(range(diff(uy))), 0))) 
+            warning("'y' values are not equispaced; output may be wrong")
+        ywid <- mean(diff(uy))
+    }
+    ncolumns <- length(ux)
+    nrows <- length(uy)
+    xlow <- ux[1] - 0.5 * xwid
+    xhigh <- ux[ncolumns] + 0.5 * xwid
+    ylow <- uy[1] - 0.5 * ywid
+    yhigh <- uy[nrows] + 0.5 * ywid
+    zmat <- rep("transparent", ncolumns * nrows)
+    idx <- match(x, ux)
+    idy <- match(y, rev(uy))
+    id <- idy + nrows * (idx - 1L)
+    zmat[id] <- zcol
+    dim(zmat) <- c(nrows, ncolumns)
+    grid.raster(as.raster(zmat), interpolate = interpolate, x = xlow, 
+        y = ylow, width = xhigh - xlow, height = yhigh - ylow, 
+        just = c("left", "bottom"), default.units = "native", 
+        name = trellis.grobname(paste(identifier, "raster", sep = "."), 
+            type = "panel", group = group))
+}
 
 
 
@@ -103,6 +205,7 @@ panel.loaLevelPlot <- function (x = NULL, y = NULL, z = NULL,
 ##panel.surfaceSmooth
 #######################################
 #######################################
+
 
 panel.surfaceSmooth <- function (x = NULL, y = NULL, z = NULL, 
     breaks = 200, x.breaks = breaks, y.breaks = breaks, 
@@ -122,7 +225,12 @@ panel.surfaceSmooth <- function (x = NULL, y = NULL, z = NULL,
 #
 
     if(!is.function(smooth.fun)){
-        smooth.fun <- function(x, y, z, ...) loess(z~x*y, ...)
+
+#surface arg is to extrapolate to full
+#range if outside requested surface range 
+#is larger than data
+
+        smooth.fun <- function(x, y, z, ...) loess(z ~ x * y, surface="direct", ...)
         process.args <- unique(names(formals(loess)))
     } else {
         process.args <- unique(names(formals(smooth.fun)))
@@ -135,13 +243,11 @@ panel.surfaceSmooth <- function (x = NULL, y = NULL, z = NULL,
        return(list(process.args = process.args, plot.args = plot.args,
                    group.args = c("col"), zcase.args = c("pch"),
                    common.args = c("breaks", "x.breaks", "y.breaks", "smooth.fun"), 
-                   default.settings = list(key.fun = "draw.loaColorKey",
-                   region=TRUE, contour=TRUE, lim.borders=0.05,
-                   isolate.col.regions = TRUE)))
+                   default.settings = loaHandler(panel.loaLevelPlot)$default.settings))
 
-#    if(is.null(z))
-#        stop("no z values supplied; this function requires z",
-#              call. = FALSE)
+    if(is.null(z))
+        stop("no z values supplied; please recall supplying z",
+              call. = FALSE)
 
     if (process) {
 
@@ -163,6 +269,7 @@ panel.surfaceSmooth <- function (x = NULL, y = NULL, z = NULL,
 
 
 #this need to be redone/redesigned
+
 
         ghosts <- list(x=x,y=y,z=z)
 
@@ -197,15 +304,19 @@ panel.surfaceSmooth <- function (x = NULL, y = NULL, z = NULL,
         if("call" %in% names(mod)){
 
 ##############################
-#testing
-#this stops the big white space border
-#            temp <- if ("xlim" %in% names(extra.args))
-#                extra.args$xlim else range(x, na.rm=TRUE)
-            temp <- range(x, na.rm=TRUE)
+#previous
+#was to stop the big white space border
+#might need a panel.range like panel.kernelDensity
+
+#            temp <- range(x, na.rm=TRUE)
+            temp <- if("xlim" %in% names(extra.args)) 
+                          extra.args$xlim else range(x, na.rm = TRUE)
+
             x <- seq(min(temp), max(temp), length.out = (x.breaks))
-#            temp <- if ("ylim" %in% names(extra.args))
-#                extra.args$ylim else range(y, na.rm=TRUE)
-            temp <- range(y, na.rm=TRUE)
+#            temp <- range(y, na.rm=TRUE)
+            temp <- if("ylim" %in% names(extra.args)) 
+                          extra.args$ylim else range(y, na.rm = TRUE)
+
             y <- seq(min(temp), max(temp), length.out = (y.breaks))
     
             d <- data.frame(x = rep(x, each= y.breaks), y = rep(y, times=x.breaks))
@@ -243,7 +354,7 @@ panel.surfaceSmooth <- function (x = NULL, y = NULL, z = NULL,
 
         if("na.rm" %in% names(extra.args) && extra.args$na.omit)
             mod <- na.omit(mod)
-
+        
 ################################
 #could just return mod as list at this stage???
 ###############################
@@ -295,7 +406,7 @@ panel.surfaceSmooth <- function (x = NULL, y = NULL, z = NULL,
 
 
 panel.kernelDensity <- function (x, y, z = NULL, ..., 
-          n = 20, kernel.fun = NULL, panel.range = TRUE, 
+          n = 20, local.wt = TRUE, kernel.fun = NULL, too.far=0, panel.range = TRUE, 
           process = TRUE, plot = TRUE, loa.settings = FALSE) 
 {
 
@@ -318,7 +429,7 @@ panel.kernelDensity <- function (x, y, z = NULL, ...,
         process.args <- unique(names(formals(kernel.fun)))
     }
 
-    plot.args <- unique(names(formals(panel.levelplot)))
+    plot.args <- unique(names(formals(panel.loaLevelPlot)))
 
     ###################
     #return safe.mode info
@@ -328,6 +439,7 @@ panel.kernelDensity <- function (x, y, z = NULL, ...,
                     plot.args = plot.args,
                     group.args = c("col"),
                     default.settings = list(key.fun = "draw.loaColorRegionsKey", 
+                                            key.raster = TRUE, 
                                             isolate.col.regions = TRUE)))
 
     ###################
@@ -350,9 +462,20 @@ panel.kernelDensity <- function (x, y, z = NULL, ...,
             mylist$lims <- c(lims$xlim, lims$ylim)
         }
         kern.in <- do.call(kernel.fun, mylist)
-        kern.in$z <- (kern.in$z/sum(kern.in$z)) * temp
+        if(local.wt)
+              kern.in$z <- (kern.in$z/sum(kern.in$z)) * temp
+        
+#this is from panel.surfaceSmooth
+#there ghosts was make at start as list(x=x, y=y)
+#here mylist has x and y unchanged... I think...
 
-    if(!plot) return(kern.in)
+        if (too.far > 0) {
+             ex.tf <- exclude.too.far(kern.in$x, kern.in$y, mylist$x, 
+                 mylist$y, dist = too.far)
+             kern.in$z[ex.tf] <- NA
+         }
+          
+         if(!plot) return(kern.in)
     } else {
         kern.in <- list(x=x, y=y, z=z)
     }
@@ -374,35 +497,48 @@ panel.kernelDensity <- function (x, y, z = NULL, ...,
         if (!"at" %in% names(extra.args)) 
             extra.args$at <- pretty(extra.args$zlim)
 
-        temp <- length(extra.args$at)-1
 
-#        extra.args$col.regions <- do.call(colHandler, 
-#                                      listUpdate(extra.args, 
-#                                          list(z=1:temp, ref=1:temp, zlim=c(1,temp))))
+#######################
+#stuff below removed because
+#I am now running this
+#through panel.loaLevelPlot
+#not panel.levelPlot
+#######################
 
-        extra.args$col.regions <- colHandler(1:(length(extra.args$at) - 1), col.regions = extra.args$col.regions, 
-                                             alpha.regions = if(is.null(extra.args$alpha.regions)) extra.args$alpha else extra.args$alpha.regions,
-                                             output = "col")
+#might need to check
 
-#colHandler(z=1:(length(temp)-1), 
-#col.regions=extra.args$col.regions)
+#        temp <- length(extra.args$at)-1
 
-#order matters
-#when removing alpha terms
-# $alpha gets $alpha...
+##        extra.args$col.regions <- do.call(colHandler, 
+##                                      listUpdate(extra.args, 
+##                                          list(z=1:temp, ref=1:temp, zlim=c(1,temp))))
 
-        extra.args$alpha.regions <- NULL
+#        extra.args$col.regions <- colHandler(1:(length(extra.args$at) - 1), col.regions = extra.args$col.regions, 
+#                                             alpha.regions = if(is.null(extra.args$alpha.regions)) extra.args$alpha else extra.args$alpha.regions,
+#                                             output = "col")
 
+##colHandler(z=1:(length(temp)-1), 
+##col.regions=extra.args$col.regions)
+
+##order matters
+##when removing alpha terms
+## $alpha gets $alpha...
+
+#        extra.args$alpha.regions <- NULL
+
+
+#this col is currently kept to set  
+#contour col
 
         if (!"col" %in% names(extra.args)) 
             extra.args$col <- trellis.par.get("dot.symbol")$col
         extra.args$col <- colHandler(1, col=extra.args$col, alpha.regions=extra.args$alpha)
 
-        extra.args$alpha <- NULL
+#        extra.args$alpha <- NULL
 
         if("groups" %in% names(extra.args) || "zcases" %in% names(extra.args))
-            do.call(groupsAndZcasesPanelHandler, listUpdate(extra.args, list(panel = panel.levelplot, plot=plot, process=process))) else
-                do.call(panel.levelplot, extra.args)
+            do.call(groupsAndZcasesPanelHandler, listUpdate(extra.args, list(panel = panel.loaLevelPlot, plot=plot, process=process))) else
+                do.call(panel.loaLevelPlot, extra.args)
 
      }
 
@@ -448,8 +584,8 @@ panel.binPlot <- function(x = NULL, y = NULL, z = NULL,
         return(list(group.args= c("col"),
                     zcase.args= c("pch"),
                     common.args = c("breaks", "pad.grid", "x.breaks", "y.breaks", "statistics"),
-                    default.settings = list(key.fun = "draw.loaColorKey", x.elements = c("x", "x1", "x2"), 
-                                            isolate.col.regions = TRUE)))
+                    default.settings = list(key.fun = "draw.loaColorKey", key.raster = TRUE, 
+                                            x.elements = c("x", "x1", "x2"), isolate.col.regions = TRUE)))
 
     extra.args <- list(...)
     

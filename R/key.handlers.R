@@ -123,8 +123,21 @@ keyHandler <- function(key = NULL, ..., output = "key"){
 
 draw.loaColorKey <- function (key = NULL, draw = FALSE, vp = NULL, ...){
 
-    if (!"at" %in% names(key)) 
-        key$at <- seq(min(key$zlim), max(key$zlim), length.out = 100)
+#    if (!"at" %in% names(key)) 
+#        key$at <- seq(min(key$zlim), max(key$zlim), length.out = 100)
+
+##########################
+#new bit replaces above
+#to regularize non-regular col keys 
+#job 27
+
+    at.method <- if ("at" %in% names(key)) "1" else "2" 
+    if(at.method=="1") key$labels$at <- key$at
+    key$at <- seq(min(key$zlim), max(key$zlim), length.out = 800)
+    if(is.null(key$col.regions))
+        key$col.regions <- trellis.par.get("regions")$col
+    if(length(key$col.regions)<length(key$at))
+        key$col.regions <- colorRampPalette(key$col.regions)(length(key$at))
 
 ######################
 #catch col and alpha 
@@ -145,8 +158,20 @@ draw.loaColorKey <- function (key = NULL, draw = FALSE, vp = NULL, ...){
 
 
 
-        key$col <- do.call(colHandler, listUpdate(key, 
-                                       list(z=temp$at, ref=temp$at)))
+#        key$col <- do.call(colHandler, listUpdate(key, 
+#                                       list(z=temp$at, ref=temp$at)))
+
+#################
+# new bit to replace above
+#job 27
+
+     key$col <- if(at.method=="1")
+        do.call(colHandler, listUpdate(key, list(z = temp$at, 
+                  ref = temp$at, at=key$labels$at))) else 
+        do.call(colHandler, listUpdate(key, list(z = key$at, ref = key$at)))
+
+
+
 #    }
 
 #####################
@@ -182,31 +207,51 @@ draw.loaColorKey <- function (key = NULL, draw = FALSE, vp = NULL, ...){
 ##############################
 
 
+#draw.loaColorRegionsKey <- function (key = NULL, draw = FALSE, vp = NULL, ...) 
+#{
+#    if (!"at" %in% names(key)) 
+#        key$at <- pretty(c(min(key$zlim), max(key$zlim)))
+#
+#    if ("isolate.col.regions" %in% names(key)) 
+#        key$col <- NULL
+#
+#    if (!"col" %in% names(key)) {
+#        temp <- listUpdate(list(...), key)
+#        key$col <- colHandler(1:(length(key$at) - 1), col.regions = temp$col.regions, 
+#            output = "col")
+#    }
+#    key <- listUpdate(key, list(labels = list(at = key$at)))
+#    if (!"col" %in% names(key)) {
+#        key$col <- do.call(colHandler, listUpdate(key, list(z = key$zlim, 
+#            output = "all")))$col.regions
+#    }
+#    if (!"alpha" %in% names(key)) {
+#        key$alpha <- do.call(colHandler, listUpdate(key, list(z = key$zlim, 
+#            output = "all")))$alpha.regions
+#    }
+#    draw.colorkey(key, draw, vp)
+#}
+
+
+#rewrite for raster
+
 draw.loaColorRegionsKey <- function (key = NULL, draw = FALSE, vp = NULL, ...) 
 {
+
     if (!"at" %in% names(key)) 
         key$at <- pretty(c(min(key$zlim), max(key$zlim)))
-
-    if ("isolate.col.regions" %in% names(key)) 
-        key$col <- NULL
-
-    if (!"col" %in% names(key)) {
-        temp <- listUpdate(list(...), key)
-        key$col <- colHandler(1:(length(key$at) - 1), col.regions = temp$col.regions, 
-            output = "col")
-    }
     key <- listUpdate(key, list(labels = list(at = key$at)))
-    if (!"col" %in% names(key)) {
-        key$col <- do.call(colHandler, listUpdate(key, list(z = key$zlim, 
-            output = "all")))$col.regions
+    temp <- listUpdate(list(...), key)
+    if ("isolate.col.regions" %in% names(key)) {
+        key$col <- NULL
+        key$alpha <- NULL
     }
-    if (!"alpha" %in% names(key)) {
-        key$alpha <- do.call(colHandler, listUpdate(key, list(z = key$zlim, 
-            output = "all")))$alpha.regions
-    }
+    key$col <- do.call(colHandler, listUpdate(key, list(z = key$at[-1], zlim=range(key$at),
+        ref = key$at[-1])))
+    key$alpha <- NULL
+    key$alpha.regions <- NULL
     draw.colorkey(key, draw, vp)
 }
-
 
 
 
@@ -1077,6 +1122,46 @@ draw.key.log10 <- function (key = NULL, draw = FALSE, vp = NULL, ...) {
         key$labels$labels <- ifelse(temp %in% temp2, temp, "")
     }
    draw.loaColorKey(key = key, draw = draw, vp = vp, ...) }
+
+
+
+
+
+
+draw.groupPlotKey <- function (key = NULL, draw = FALSE, vp = NULL, ...) 
+{
+
+#this will need more work
+#don't think extra.args ever contains anything
+#this falls over if col and group.ids are not same length
+#     this happens because factor cases are missing from a factor
+
+    extra.args <- list(...)
+
+#this need grid:::nullGrob() to run in workspace
+
+    if (!is.list(key)) {
+        warning("suspect key ignored", call. = FALSE)
+        return(nullGrob())
+    }
+
+    #nothing to plot
+    if(!"group.ids" %in% names(key)) return(nullGrob())
+
+    temp <- listUpdate(list(space="right", adj=1), key, use=c("space", "adj"))
+    temp$zcases.main = if("main" %in% names(key))
+                          key$main else "groups"
+    temp$zcase.ids <- as.character(key$group.ids)
+    temp$col <- key$col
+    do.call(draw.zcasePlotKey, listUpdate(list(key = temp, draw = draw, vp = vp), extra.args))  
+   
+}
+
+
+
+
+
+
 
 
 

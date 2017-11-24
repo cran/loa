@@ -14,8 +14,8 @@
 \tabular{ll}{
 Package: \tab loa\cr
 Type: \tab Package\cr
-Version: \tab 0.2.38\cr
-Date: \tab 2016-03-01\cr
+Version: \tab 0.2.43\cr
+Date: \tab 2017-11-23\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }
@@ -36,6 +36,8 @@ use of this framework. These are summarized in section 1 of this manual, and inc
 1.3. \code{\link{trianglePlot}} and associated functions.
 
 1.4. \code{\link{stackPlot}} and associated functions.
+
+1.5. \code{\link{loaBarPlot}} and associated functions.
 
 Other \code{panel...} functions and example data are summarized in sections 2 and 
 3, respectively:

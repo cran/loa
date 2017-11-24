@@ -23,8 +23,9 @@ panel.surfaceSmooth(x = NULL, y = NULL, z = NULL,
          plot = TRUE, process = TRUE, loa.settings = FALSE)
 
 panel.kernelDensity(x, y, z = NULL, ..., n = 20, 
-         kernel.fun = NULL, panel.range = TRUE, 
-         process = TRUE, plot = TRUE, loa.settings = FALSE)
+         local.wt = TRUE, kernel.fun = NULL, too.far = 0, 
+         panel.range = TRUE, process = TRUE, plot = TRUE, 
+         loa.settings = FALSE)
 
 panel.binPlot(x = NULL, y = NULL, z = NULL, 
          breaks=20, x.breaks = breaks, y.breaks = breaks,
@@ -63,13 +64,18 @@ panel.binPlot(x = NULL, y = NULL, z = NULL,
   details.
   } 
 
- \item{too.far}{ (For \code{panel.surfaceSmooth}) The distance from original data 
+ \item{too.far}{ (For \code{panel.surfaceSmooth} and \code{panel.kernelDensity}) The distance from original data 
   at which to stop predicting surface values. See notes below for further 
   details.  
   }
 
  \item{n}{ (For \code{panel.kernelDensity}) the number of x and y 
   cases to estimate when estimating density.  
+  } 
+
+ \item{local.wt}{ (For \code{panel.kernelDensity}) A logical (default \code{TRUE})
+  indicating if kernel density estimates should be weighed relative to other 
+  groups, panels, etc.  
   } 
 
  \item{kernel.fun}{ (For \code{panel.kernelDensity}) A function that can 
@@ -256,54 +262,6 @@ loaPlot(volcano, panel=panel.loaLevelPlot)
 loaPlot(copper~longitude*latitude, data= lat.lon.meuse, 
         panel=panel.surfaceSmooth, grid=TRUE, 
         too.far=0.1, col.regions=3:2)
-
-
-## Example 3
-## (not run)
-
-
-## 3a. Specialist kernel density panel example 
-
-#a <- rnorm(1000)
-#b <- rnorm(1000)
-#c <- rnorm(1000)
-
-#compare:
-#xyplot(a~b, panel = panel.kernelDensity, at = 0:5*5)
-#loaPlot(~a*b, panel = panel.kernelDensity)
-
-#  Note 1:
-#  at sets col.regions for the color surface, but, as this is calculated 
-#  in-panel, this is not known at time of call. So, you need to set when 
-#  using specialist panels with standard lattice plots. 
-#  (Same is true for any panel where plot attributes that are set in-panel 
-#  and is needed to be known in all panels and keys for consistent output.)
-#  loa panels include separate process and plot steps that panelPal can 
-#  use to track these. 
-
-#  Note 2:
-#  By default, the panel ignores z data.  
-#
-#  compare: 
-#  loaPlot(c~a*b, panel = panel.kernelDensity)        #where z term (c) ignored
-#  loaPlot(c~a*b, panel = panel.kernelDensity, n=100) #finer surface resolution
-                                                      #but z term STILL ignored
-
-## 3b. Specialist bin plot panel example 
-
-#  By default, the panel bins supplied z case as mean
-#  modify by supplying alternative as statistic
-
-#loaPlot(c~a*b, panel = panel.binPlot)
-#loaPlot(c~a*b, panel = panel.binPlot, statistic=max)
-
-#  Note:
-#  If z is not supplied, statistic defaults to length to give a count 
-
-#  loaPlot(~a*b, panel = panel.binPlot)               #where z term not supplied
-
-#etc.
-
 
 }
 
