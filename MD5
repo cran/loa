@@ -1,6 +1,6 @@
-2293beb77126f76e7174d4245e4a893f *DESCRIPTION
+6969207ef493f088ca50c977e101950a *DESCRIPTION
 5614bbda86672d710b755451282ffb75 *NAMESPACE
-48889548cd59ac0a51e8aa6534c894e5 *NEWS
+79ba8419f652d1eea0b2cde1a8b1e910 *NEWS
 b0b174f678e93c1473ba29f75ee22800 *R/0pts.R
 f9b6d1a0a8ed01a3c62f69519844bd5b *R/cond.handlers.R
 5820168aad6f8764991f42a447feba98 *R/formulaHandler.R
@@ -9,11 +9,11 @@ f9b6d1a0a8ed01a3c62f69519844bd5b *R/cond.handlers.R
 3cbcf5bb85408a8065c4d0ef85b53ecb *R/lims.and.scales.handlers.R
 e64ef7f5ad0cf3ffae572493af50770b *R/list.handlers.R
 aad38c3e410ac56fadc9607e65cffdd1 *R/loaBarPlot.R
-2ef9057e50f4d8276eced8e9c1b92b82 *R/loaPlot.R
+901bb15b46ce2c7768a4c80b339978ba *R/loaPlot.R
 4b47a5cf83319b130b1a0ad84c5cfb27 *R/loaShapes.R
 7ecdfcc7734b9543f4aa755e71ba4e17 *R/other.panel.functions.R
 014b13d93154674ac05250fe545c52cd *R/panelPal.R
-6d66e741ca2b3500a28e626e6b33abec *R/plot.argument.handlers.R
+f2e2b74866450ced16d549bf0f07bbc6 *R/plot.argument.handlers.R
 d82470bf4f3d8a1ef178435a77815122 *R/plot.interactives.R
 c83f60a34ced58e208c7104685b6601b *R/specialist.panels.01.R
 3af7256d6cd0a1373782798a9d6459ff *R/specialist.panels.02.polar.R
@@ -34,7 +34,7 @@ d0dd3e88f1875f69afa04f5a2a5ee059 *man/2.1.specialist.panels.Rd
 6d4f05a4202b6b8aa4c5e7111f323ec5 *man/2.2.specialist.panels.Rd
 20a5f34d8557a49c15cc2e02489e3175 *man/2.3.specialist.panels.Rd
 3741d30446cce29698b44300a8a91372 *man/2.4.specialist.panels.Rd
-198c865426c0f7bd02d3e0fabef02d15 *man/3.1.example.data.Rd
+7ef2ab10eddaa5239535000bdd9e9ec8 *man/3.1.example.data.Rd
 4fa4be81144f1ed2740c9f5ec71bfebf *man/4.1.panel.pal.Rd
 20c37788bb5926071dcd740b51bb6e68 *man/4.2.plot.structure.handlers.Rd
 49f0c8ca6cc681292f4bb4e0a52f5675 *man/4.3.lims.and.scales.handlers.Rd
@@ -45,4 +45,4 @@ ee129776c41553e33caf8d85cc1e186e *man/4.7.other.panel.functions.Rd
 09829b17f978d6343ab51512a30bd75a *man/4.8.list.handlers.Rd
 b3ab4b188106c008da97347704ac4b8e *man/4.9.loa.shapes.Rd
 1538f2852ef01be326f144cfea03d555 *man/5.1.plot.interactives.Rd
-3a6361ed21f987e08f48011d5e963de8 *man/loa-package.Rd
+6cf218105cf5106e26f91d6c00695bdd *man/loa-package.Rd
