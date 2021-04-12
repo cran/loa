@@ -1,8 +1,8 @@
 Package: loa
 Type: Package
 Title: Lattice Options and Add-Ins
-Version: 0.2.46.3
-Date: 2021-01-16
+Version: 0.2.47.1
+Date: 2021-04-10
 Author: Karl Ropkins
 URL: http://loa.r-forge.r-project.org/loa.intro.html
 Maintainer: Karl Ropkins <karl.ropkins@gmail.com>
@@ -18,6 +18,6 @@ LazyLoad: yes
 LazyData: yes
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2021-01-16 06:58:39 UTC; Karl
+Packaged: 2021-04-10 17:15:18 UTC; Karl
 Repository: CRAN
-Date/Publication: 2021-01-16 08:30:02 UTC
+Date/Publication: 2021-04-12 18:00:03 UTC
