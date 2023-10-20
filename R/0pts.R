@@ -7,10 +7,16 @@
 ##########################
 ##########################
 
+#sp/rgdal update
+
+options("sp_evolution_status" = 2)
+options("rgdal_show_exportToProj4_warnings"="none")
+
+
 #example
 #globalVariables(c("hasGroupNumber"))
-
-
+globalVariables(c("MaxZoom", "MapBackground", "GetMap.bbox", "GetMap", 
+                  "qbbox"))
 
 #setup
 
