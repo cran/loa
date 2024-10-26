@@ -28,7 +28,7 @@
 
   loaMapPlot(x, data = NULL, panel = panel.loaPlot, map = NULL, 
         map.panel = panel.loaBGMapPlotRaster, recolor.map = FALSE, 
-        show.axes = FALSE, ..., map.source = getRGMapArg, 
+        show.axes = FALSE, ..., map.source = getOSMapArg, 
         lon.lat = FALSE)
 
   RgoogleMapsPlot(x, data = NULL, ...)
@@ -88,7 +88,7 @@
 
   \item{recolor.map}{For \code{MapPlot}s only. If supplied, a vector of 
    elements that R can treat as colors, used as a color scale to recolor 
-   \code{map}. This uses standard \code{\link{RColorBrewer}} functions, 
+   \code{map}. This uses standard \code{\link[RColorBrewer]{RColorBrewer}} functions, 
    so can handle arguments like \code{recolor.map} \code{= c("white", "grey")} 
    for greyscale, etc. Disabled by the default, or \code{FALSE} or \code{NULL} 
    settings.    
@@ -102,7 +102,7 @@
   \item{...}{ Additional arguments are passed on to related functions. 
 
    For \code{MapPlot}s these are \code{getRSMapArg} or \code{getOSMapArg}, 
-   \code{\link{colHandler}}, \code{\link{cexHandler}} and \code{\link{xyplot}}.
+   \code{\link{colHandler}}, \code{\link{cexHandler}} and \code{\link[lattice]{xyplot}}.
    
    By default both data point colour and size are \code{z}-scaled for \code{MapPlot}s. 
    So, if \code{z} is supplied, these plot properties are managed by 
@@ -114,7 +114,7 @@
    \code{col.region} to change the color range that is applied to \code{z}. 
    See associated Help documents for further information.
 
-   Similarly, argument passing to \code{\link{xyplot}} in both \code{MapPlot}s 
+   Similarly, argument passing to \code{\link[lattice]{xyplot}} in both \code{MapPlot}s 
    provides access to most common plot parameters, e.g. \code{col}, 
    \code{pch}, and \code{cex} for plot symbol color, type and size, respectively. 
 
@@ -168,7 +168,7 @@
   \code{getMap...} functions accept latitude and longitude ranges and 
    related \code{RgoogleMaps} or \code{OpenStreetMap} function arguments, 
    and produces an output suitable for use as the \code{map} argument in 
-   subsequent (same area) \code{MatPlot}s or in \code{panel.loaBGMapPlotRaster} 
+   subsequent (same area) \code{MapPlot}s or in \code{panel.loaBGMapPlotRaster} 
    or \code{panel.loaBGMapPlot} panel function calls.
    
   \code{LatLon2MercatorXY} converts supplied latitude and longitude time-series 
@@ -310,15 +310,15 @@
 
    In other packages, see
 
-   \code{RgoogleMaps}: \code{\link{GetMap}}.
+   \code{RgoogleMaps}: \code{\link[RgoogleMaps]{GetMap}}.
    
-   \code{OpenStreetMap}: \code{\link{openmap}}.
+   \code{OpenStreetMap}: \code{\link[OpenStreetMap]{openmap}}.
    
-   \code{sp}: \code{\link{coordinates}}; \code{\link{proj4string}}; and, 
-   \code{\link{spTransform}}.
+   \code{sp}: \code{\link[sp]{coordinates}}; \code{\link[sp]{proj4string}}; and, 
+   \code{\link[sp]{spTransform}}.
    
-   \code{\link{lattice}}: \code{\link{xyplot}}; \code{\link{panel.xyplot}}; and 
-   \code{\link{panel.levelplot}}.
+   \code{lattice}: \code{\link[lattice]{xyplot}}; \code{\link[lattice]{panel.xyplot}}; and 
+   \code{\link[lattice]{panel.levelplot}}.
    
 }
 
